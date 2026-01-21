@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuyModgame - Chữ Đổi Màu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            overflow: hidden;
+            color: white;
+            padding: 20px;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 1200px;
+            width: 100%;
+            padding: 30px;
+        }
+        
+        .title {
+            font-size: 6rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            background: linear-gradient(90deg, 
+                #ff0000, #ff9900, #ffff00, 
+                #00ff00, #00ffff, #0000ff, 
+                #9900ff, #ff00ff, #ff0000);
+            background-size: 500% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: colorShift 8s linear infinite, pulse 3s ease-in-out infinite alternate;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        
+        @keyframes colorShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            color: #e0e0e0;
+            opacity: 0.9;
+        }
+        
+        .color-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .color-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            margin-right: 20px;
+            animation: boxColorShift 8s linear infinite;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+        
+        @keyframes boxColorShift {
+            0% { background-color: #ff0000; }
+            14% { background-color: #ff9900; }
+            28% { background-color: #ffff00; }
+            42% { background-color: #00ff00; }
+            57% { background-color: #00ffff; }
+            71% { background-color: #0000ff; }
+            85% { background-color: #9900ff; }
+            100% { background-color: #ff0000; }
+        }
+        
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            font-size: 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .speed-control {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            color: #e0e0e0;
+        }
+        
+        .speed-control label {
+            margin-right: 15px;
+        }
+        
+        .speed-control input {
+            width: 200px;
+            margin-right: 15px;
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        /* Hiệu ứng nền */
+        .bg-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            100% {
+                transform: translateY(-1000px) translateX(500px);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 3.5rem;
+                letter-spacing: 2px;
+            }
+            
+            .subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .color-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .color-box {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation" id="bgAnimation"></div>
+    
+    <div class="container">
+        <h1 class="title" id="colorText">QuyModgame</h1>
+    </div>
+    
+
+
+    <script>
+        // Tạo các vòng tròn nền động
+        function createBackgroundAnimation() {
+            const bgAnimation = document.getElementById('bgAnimation');
+            const colors = ['#ff0000', '#ff9900', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#9900ff', '#ff00ff'];
+            
+            for (let i = 0; i < 15; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('bg-circle');
+                
+                // Kích thước ngẫu nhiên
+                const size = Math.random() * 200 + 50;
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                
+                // Vị trí ngẫu nhiên
+                circle.style.left = `${Math.random() * 100}%`;
+                circle.style.top = `${Math.random() * 100}%`;
+                
+                // Màu sắc ngẫu nhiên
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                circle.style.background = `radial-gradient(circle, ${color}20 0%, ${color}00 70%)`;
+                
+                // Tốc độ di chuyển ngẫu nhiên
+                const duration = Math.random() * 30 + 20;
+                const delay = Math.random() * 10;
+                circle.style.animationDuration = `${duration}s`;
+                circle.style.animationDelay = `${delay}s`;
+                
+                bgAnimation.appendChild(circle);
+            }
+        }
+        
+        // Tạo mô tả màu sắc
+        function getColorDescription(color) {
+            const colorDescriptions = {
+                '#ff0000': 'Màu đỏ - Màu đầu tiên trong dải cầu vồng',
+                '#ff9900': 'Màu cam - Màu thứ hai trong dải cầu vồng',
+                '#ffff00': 'Màu vàng - Màu thứ ba trong dải cầu vồng',
+                '#00ff00': 'Màu xanh lá - Màu thứ tư trong dải cầu vồng',
+                '#00ffff': 'Màu xanh ngọc - Màu thứ năm trong dải cầu vồng',
+                '#0000ff': 'Màu xanh dương - Màu thứ sáu trong dải cầu vồng',
+                '#9900ff': 'Màu tím - Màu thứ bảy trong dải cầu vồng',
+                '#ff00ff': 'Màu hồng - Màu cuối cùng trong dải cầu vồng'
+            };
+            
+            return colorDescriptions[color] || 'Màu sắc đặc biệt';
+        }
+        
+        // Cập nhật màu hiện tại
+        function updateCurrentColor() {
+            const title = document.getElementById('colorText');
+            const computedStyle = window.getComputedStyle(title);
+            const bgImage = computedStyle.backgroundImage;
+            
+            // Trích xuất màu từ gradient (xấp xỉ)
+            const colors = ['#ff0000', '#ff9900', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#9900ff', '#ff00ff'];
+            
+            // Tính toán màu hiện tại dựa trên thời gian
+            const now = Date.now();
+            const duration = 8000; // 8 giây
+            const progress = (now % duration) / duration;
+            const colorIndex = Math.floor(progress * colors.length);
+            
+            const currentColor = colors[colorIndex];
+            const currentColorBox = document.getElementById('currentColorBox');
+            const currentColorText = document.getElementById('currentColor');
+            const colorDescription = document.getElementById('colorDescription');
+            
+            currentColorBox.style.backgroundColor = currentColor;
+            currentColorText.textContent = currentColor;
+            colorDescription.textContent = getColorDescription(currentColor);
+        }
+        
+        // Điều khiển tốc độ
+        let speed = 10; // Giá trị mặc định
+        let isPaused = false;
+        let isReversed = false;
+        
+        document.getElementById('speedRange').addEventListener('input', function() {
+            speed = parseInt(this.value);
+            const title = document.getElementById('colorText');
+            
+            // Cập nhật tốc độ animation
+            const duration = 21 - speed; // Đảo ngược để thanh trượt tăng thì tốc độ tăng
+            title.style.animationDuration = `${duration}s`;
+            
+            // Cập nhật nhãn tốc độ
+            const speedValue = document.getElementById('speedValue');
+            if (speed <= 5) {
+                speedValue.textContent = 'Chậm';
+            } else if (speed <= 10) {
+                speedValue.textContent = 'Vừa phải';
+            } else if (speed <= 15) {
+                speedValue.textContent = 'Nhanh';
+            } else {
+                speedValue.textContent = 'Rất nhanh';
+            }
+        });
+        
+        // Tăng tốc độ
+        document.getElementById('speedUp').addEventListener('click', function() {
+            const speedRange = document.getElementById('speedRange');
+            speed = Math.min(20, speed + 2);
+            speedRange.value = speed;
+            speedRange.dispatchEvent(new Event('input'));
+        });
+        
+        // Giảm tốc độ
+        document.getElementById('speedDown').addEventListener('click', function() {
+            const speedRange = document.getElementById('speedRange');
+            speed = Math.max(1, speed - 2);
+            speedRange.value = speed;
+            speedRange.dispatchEvent(new Event('input'));
+        });
+        
+        // Đảo chiều
+        document.getElementById('reverse').addEventListener('click', function() {
+            const title = document.getElementById('colorText');
+            isReversed = !isReversed;
+            
+            if (isReversed) {
+                title.style.animationDirection = 'reverse';
+                this.style.backgroundColor = 'rgba(255, 100, 100, 0.3)';
+            } else {
+                title.style.animationDirection = 'normal';
+                this.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+            }
+        });
+        
+        // Tạm dừng/Tiếp tục
+        document.getElementById('pauseResume').addEventListener('click', function() {
+            const title = document.getElementById('colorText');
+            isPaused = !isPaused;
+            
+            if (isPaused) {
+                title.style.animationPlayState = 'paused';
+                this.textContent = 'Tiếp tục';
+                this.style.backgroundColor = 'rgba(100, 255, 100, 0.3)';
+            } else {
+                title.style.animationPlayState = 'running';
+                this.textContent = 'Tạm dừng';
+                this.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+            }
+        });
+        
+        // Khởi tạo
+        window.addEventListener('DOMContentLoaded', function() {
+            createBackgroundAnimation();
+            
+            // Cập nhật màu hiện tại mỗi 100ms
+            setInterval(updateCurrentColor, 100);
+            
+            // Kích hoạt sự kiện input để thiết lập tốc độ ban đầu
+            document.getElementById('speedRange').dispatchEvent(new Event('input'));
+        });
+    </script>
+</body>
+</html>
