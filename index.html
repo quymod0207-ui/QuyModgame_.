@@ -2,147 +2,421 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bypass Layma VIP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bypass Link Rút Gọn QM</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --bg-color: var(--tg-theme-bg-color, #17212b);
-            --text-color: var(--tg-theme-text-color, #ffffff);
-            --button-color: var(--tg-theme-button-color, #5288c1);
-            --button-text: var(--tg-theme-button-text-color, #ffffff);
-            --hint-color: var(--tg-theme-hint-color, #aaaaaa);
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+        * {
             margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
+
+        body {
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #1c1c1e);
+            padding: 24px 20px 32px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         .container {
             width: 100%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 20px;
-            box-sizing: border-box;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 420px;
+            margin: 0 auto;
         }
-        h2 { text-align: center; margin-top: 0; font-size: 20px; }
-        label { font-size: 14px; color: var(--hint-color); display: block; margin-bottom: 8px; }
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.2);
-            color: var(--text-color);
-            box-sizing: border-box;
-            font-size: 15px;
-            outline: none;
+
+        .card {
+            background: var(--tg-theme-secondary-bg-color, #f8f8fa);
+            border-radius: 24px;
+            padding: 24px 20px 28px;
+            border: 1px solid var(--tg-theme-section-border-color, #e5e5ea);
         }
-        button {
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header i {
+            font-size: 28px;
+            color: var(--tg-theme-button-color, #3390ec);
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .input-wrap {
+            background: var(--tg-theme-bg-color, #ffffff);
+            border-radius: 14px;
+            padding: 0 16px;
+            border: 1.5px solid var(--tg-theme-section-border-color, #d1d1d6);
+            margin-bottom: 16px;
+            transition: border-color 0.15s;
+        }
+
+        .input-wrap:focus-within {
+            border-color: var(--tg-theme-button-color, #3390ec);
+        }
+
+        .input-wrap input {
             width: 100%;
-            padding: 12px;
-            margin-top: 15px;
+            padding: 15px 0;
             border: none;
-            border-radius: 8px;
-            background-color: var(--button-color);
-            color: var(--button-text);
-            font-weight: bold;
+            background: transparent;
             font-size: 16px;
+            outline: none;
+            color: var(--tg-theme-text-color, #1c1c1e);
+        }
+
+        .input-wrap input::placeholder {
+            color: var(--tg-theme-hint-color, #8e8e93);
+            font-weight: 400;
+        }
+
+        .btn {
+            background: var(--tg-theme-button-color, #3390ec);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            border-radius: 60px;
+            padding: 15px 20px;
+            font-size: 17px;
+            font-weight: 600;
+            width: 100%;
             cursor: pointer;
+            transition: opacity 0.15s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        #result-box {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 8px;
-            word-break: break-all;
-            display: none;
+
+        .btn:active {
+            transform: scale(0.97);
+            opacity: 0.8;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            transform: none;
+            pointer-events: none;
+        }
+
+        .result-box {
+            margin-top: 24px;
+            background: var(--tg-theme-bg-color, #ffffff);
+            border-radius: 18px;
+            padding: 16px 16px 14px;
+            border: 1px solid var(--tg-theme-section-border-color, #e5e5ea);
+            min-height: 80px;
+        }
+
+        .result-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--tg-theme-hint-color, #8e8e93);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #resultContent {
+            font-size: 15px;
+            line-height: 1.6;
+            word-break: break-word;
+            white-space: pre-wrap;
+            color: var(--tg-theme-text-color, #1c1c1e);
+        }
+
+        .placeholder {
+            color: var(--tg-theme-hint-color, #a0a0a5);
+            font-style: italic;
+        }
+
+        .error {
+            color: #e04444;
+            font-weight: 500;
+        }
+
+        .success {
+            color: #2a8c4a;
+            font-weight: 500;
+        }
+
+        .link-preview {
+            margin-top: 14px;
+            background: var(--tg-theme-secondary-bg-color, #f0f0f2);
+            border-radius: 12px;
+            padding: 10px 14px;
             font-size: 14px;
+            border-left: 4px solid var(--tg-theme-button-color, #3390ec);
+            word-break: break-all;
         }
-        .loading { background: rgba(241, 196, 15, 0.15); border: 1px solid #f1c40f; color: #f1c40f; }
-        .success { background: rgba(46, 204, 113, 0.15); border: 1px solid #2ecc71; color: #2ecc71; }
-        .error { background: rgba(231, 76, 60, 0.15); border: 1px solid #e74c3c; color: #e74c3c; }
+
+        .link-preview a {
+            color: var(--tg-theme-link-color, #3390ec);
+            text-decoration: none;
+            border-bottom: 1px dotted;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.25);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .footnote {
+            margin-top: 28px;
+            font-size: 12px;
+            color: var(--tg-theme-hint-color, #8e8e93);
+            text-align: center;
+            border-top: 1px solid var(--tg-theme-section-border-color, #e5e5ea);
+            padding-top: 20px;
+            width: 100%;
+        }
+
+        /* Dark mode hỗ trợ tự động */
+        @media (prefers-color-scheme: dark) {
+            body { background: var(--tg-theme-bg-color, #1c1c1e); }
+            .card { background: var(--tg-theme-secondary-bg-color, #2c2c2e); }
+            .input-wrap { background: var(--tg-theme-bg-color, #1c1c1e); }
+            .result-box { background: var(--tg-theme-bg-color, #1c1c1e); }
+            .link-preview { background: var(--tg-theme-secondary-bg-color, #2c2c2e); }
+        }
     </style>
 </head>
 <body>
-
 <div class="container">
-    <h2>BYPASS LAYMA.NET VIP</h2>
-    <label for="urlInput">Dán đường dẫn cần bypass:</label>
-    <input type="text" id="urlInput" placeholder="https://layma.net/..." />
-    <button onclick="handleBypass()">BẮT ĐẦU BYPASS</button>
+    <div class="card">
+        <div class="header">
+            <i class="fas fa-link" style="font-family: 'Font Awesome 6 Free'; font-weight: 900;"></i>
+            <h1>Bypass Link Layma.net [ QM ]</h1>
+        </div>
 
-    <div id="result-box"></div>
+        <div class="input-wrap">
+            <input type="url" id="linkInput" placeholder="Dán link cần bypass..." autocomplete="url" spellcheck="false">
+        </div>
+
+        <button class="btn" id="bypassBtn">
+            <span id="btnText"><i class="fas fa-bolt" style="font-family: 'Font Awesome 6 Free'; font-weight: 900;"></i> BYPASS</span>
+        </button>
+
+        <div class="result-box">
+            <div class="result-label">
+                <i class="fas fa-arrow-right" style="font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: 11px;"></i> Kết quả
+            </div>
+            <div id="resultContent" class="placeholder">Nhập link và nhấn Bypass</div>
+            <div id="linkPreview"></div>
+        </div>
+    </div>
+    <div class="footnote">
+        <i class="fas fa-server" style="font-family: 'Font Awesome 6 Free'; font-weight: 900;"></i> CRE : QUYMODGAME 
+    </div>
 </div>
 
+<!-- Font Awesome (nhẹ) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-
-    async function handleBypass() {
-        const urlInput = document.getElementById("urlInput").value.trim();
-        const resultBox = document.getElementById("result-box");
-
-        if (!urlInput) {
-            tg.showAlert("Vui lòng nhập đường dẫn!");
-            return;
+    (function() {
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
         }
 
-        resultBox.style.display = "block";
-        resultBox.className = "loading";
-        resultBox.innerHTML = "⏳ <b>Đang xử lý bypass, vui lòng chờ...</b>";
+        const linkInput = document.getElementById('linkInput');
+        const bypassBtn = document.getElementById('bypassBtn');
+        const btnText = document.getElementById('btnText');
+        const resultContent = document.getElementById('resultContent');
+        const linkPreview = document.getElementById('linkPreview');
 
-        try {
-            const apiEndpoint = `https://api.allorigins.win/get?url=${encodeURIComponent("http://test.skidvn.com/bypasslayma.php?link=" + encodeURIComponent(urlInput))}`;
-            const response = await fetch(apiEndpoint);
-            const data = await response.json();
-            
-            if (data && data.contents) {
-                const resJson = JSON.parse(data.contents);
-                if (resJson.data) {
-                    resultBox.className = "success";
-                    resultBox.innerHTML = "✅ <b>Thành công!</b> Đang gửi kết quả vào Telegram...";
+        const API_BASE = 'http://test.skidvn.com/bypasslayma.php?link=';
 
-                    if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
+        function setLoading(loading) {
+            if (loading) {
+                bypassBtn.disabled = true;
+                btnText.innerHTML = '<span class="spinner"></span> Đang xử lý';
+                resultContent.innerHTML = '<i class="fas fa-spinner fa-pulse" style="margin-right: 6px;"></i> Đang gửi...';
+                resultContent.className = '';
+                linkPreview.innerHTML = '';
+            } else {
+                bypassBtn.disabled = false;
+                btnText.innerHTML = '<i class="fas fa-bolt"></i> Bypass';
+            }
+        }
 
-                    // Gửi dữ liệu gồm link gốc và link đã bypass về lại cho bot Python
-                    const payload = JSON.stringify({
-                        target_url: urlInput,
-                        result: resJson.data
-                    });
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text).replace(/[&<>"']/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                if (m === '"') return '&quot;';
+                return '&#039;';
+            });
+        }
 
-                    // Nếu dùng nút Menu Button / Keyboard WebApp
-                    if (tg.sendData) {
-                        tg.sendData(payload);
-                        tg.close();
-                    } else {
-                        // Trường hợp mở bằng Inline Button
-                        resultBox.innerHTML = `
-                            <b>🎉 XỬ LÝ THÀNH CÔNG!</b><br/><br/>
-                            <b>Kết quả:</b><br/>
-                            <code>${resJson.data}</code>
-                        `;
+        function extractLinkFromData(data) {
+            if (!data) return null;
+            if (typeof data === 'string') {
+                if (data.startsWith('http://') || data.startsWith('https://')) return data;
+                return null;
+            }
+            if (typeof data === 'object') {
+                for (const key in data) {
+                    const val = data[key];
+                    if (typeof val === 'string' && (val.startsWith('http://') || val.startsWith('https://'))) {
+                        return val;
                     }
-                    return;
+                    if (typeof val === 'object') {
+                        const found = extractLinkFromData(val);
+                        if (found) return found;
+                    }
                 }
             }
-            
-            resultBox.className = "error";
-            resultBox.innerHTML = "❌ <b>Lỗi:</b> Không lấy được link kết quả từ API.";
-            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred("error");
-
-        } catch (err) {
-            resultBox.className = "error";
-            resultBox.innerHTML = "❌ <b>Lỗi:</b> Không thể kết nối tới server API!";
-            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred("error");
+            return null;
         }
-    }
-</script>
 
+        function displayResult(data) {
+            let text = '';
+            let isError = false;
+            let linkFound = null;
+
+            if (typeof data === 'string') {
+                text = data.trim();
+                if (text.startsWith('{') || text.startsWith('[')) {
+                    try {
+                        const parsed = JSON.parse(text);
+                        const formatted = JSON.stringify(parsed, null, 2);
+                        text = formatted;
+                        linkFound = extractLinkFromData(parsed);
+                    } catch (e) { /* giữ nguyên */ }
+                }
+                // nếu text là link
+                if (text.startsWith('http://') || text.startsWith('https://')) {
+                    linkFound = text;
+                }
+            } else if (typeof data === 'object' && data !== null) {
+                text = JSON.stringify(data, null, 2);
+                linkFound = extractLinkFromData(data);
+            } else {
+                text = String(data);
+            }
+
+            if (!text || text.length === 0) {
+                text = '⚠️ API trả về rỗng';
+                isError = true;
+            }
+
+            // Kiểm tra lỗi
+            const lower = text.toLowerCase();
+            if (lower.includes('error') || lower.includes('lỗi') || lower.includes('fail')) {
+                isError = true;
+            }
+
+            // Gán nội dung
+            if (isError) {
+                resultContent.innerHTML = `<span class="error"><i class="fas fa-exclamation-circle"></i> ${escapeHtml(text)}</span>`;
+            } else {
+                resultContent.innerHTML = `<span class="success"><i class="fas fa-check-circle"></i> </span>${escapeHtml(text)}`;
+            }
+
+            // Hiển thị link nếu tìm thấy
+            if (linkFound) {
+                linkPreview.innerHTML = `
+                    <div class="link-preview">
+                        <i class="fas fa-arrow-right" style="margin-right: 6px;"></i>
+                        <strong>Link:</strong> 
+                        <a href="${escapeHtml(linkFound)}" target="_blank" rel="noopener">${escapeHtml(linkFound)}</a>
+                    </div>
+                `;
+            } else {
+                linkPreview.innerHTML = '';
+            }
+        }
+
+        async function handleBypass() {
+            const raw = linkInput.value.trim();
+            if (!raw) {
+                resultContent.innerHTML = '<span class="error"><i class="fas fa-exclamation-triangle"></i> Vui lòng nhập link</span>';
+                resultContent.className = '';
+                linkPreview.innerHTML = '';
+                return;
+            }
+
+            if (!raw.startsWith('http://') && !raw.startsWith('https://')) {
+                resultContent.innerHTML = '<span class="error"><i class="fas fa-exclamation-triangle"></i> Link phải bắt đầu http:// hoặc https://</span>';
+                resultContent.className = '';
+                linkPreview.innerHTML = '';
+                return;
+            }
+
+            setLoading(true);
+            try {
+                const encoded = encodeURIComponent(raw);
+                const url = API_BASE + encoded;
+                const resp = await fetch(url, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json, text/plain, */*' }
+                });
+                const rawText = await resp.text();
+
+                let resultData;
+                try {
+                    resultData = JSON.parse(rawText);
+                } catch (e) {
+                    resultData = rawText;
+                }
+
+                displayResult(resultData);
+            } catch (err) {
+                resultContent.innerHTML = `<span class="error"><i class="fas fa-times-circle"></i> Lỗi: ${escapeHtml(err.message)}</span>`;
+                resultContent.className = '';
+                linkPreview.innerHTML = '';
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        bypassBtn.addEventListener('click', handleBypass);
+        linkInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleBypass();
+            }
+        });
+
+        // Hiển thị link mẫu ban đầu (không gọi API)
+        const sample = linkInput.value.trim();
+        if (sample) {
+            linkPreview.innerHTML = `
+                <div class="link-preview" style="opacity:0.7; border-left-color: #8e8e93;">
+                    <i class="fas fa-pencil-alt" style="margin-right: 6px;"></i>
+                    ${escapeHtml(sample)}
+                </div>
+            `;
+        }
+    })();
+</script>
 </body>
 </html>
