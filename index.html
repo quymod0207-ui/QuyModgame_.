@@ -31,17 +31,8 @@
             box-sizing: border-box;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        h2 {
-            text-align: center;
-            margin-top: 0;
-            font-size: 20px;
-        }
-        label {
-            font-size: 14px;
-            color: var(--hint-color);
-            display: block;
-            margin-bottom: 8px;
-        }
+        h2 { text-align: center; margin-top: 0; font-size: 20px; }
+        label { font-size: 14px; color: var(--hint-color); display: block; margin-bottom: 8px; }
         input[type="text"] {
             width: 100%;
             padding: 12px;
@@ -65,31 +56,91 @@
             font-size: 16px;
             cursor: pointer;
         }
+        #result-box {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            word-break: break-all;
+            display: none;
+            font-size: 14px;
+        }
+        .loading { background: rgba(241, 196, 15, 0.15); border: 1px solid #f1c40f; color: #f1c40f; }
+        .success { background: rgba(46, 204, 113, 0.15); border: 1px solid #2ecc71; color: #2ecc71; }
+        .error { background: rgba(231, 76, 60, 0.15); border: 1px solid #e74c3c; color: #e74c3c; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2>BYPASS LAYMA.NET VIP</h2>
-    <label for="urlInput">Dán đường dẫn cần bypass vào đây:</label>
+    <label for="urlInput">Dán đường dẫn cần bypass:</label>
     <input type="text" id="urlInput" placeholder="https://layma.net/..." />
-    <button onclick="sendData()">GỬI YÊU CẦU</button>
+    <button onclick="handleBypass()">BẮT ĐẦU BYPASS</button>
+
+    <div id="result-box"></div>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    function sendData() {
-        const url = document.getElementById("urlInput").value.trim();
-        if (!url) {
+    async function handleBypass() {
+        const urlInput = document.getElementById("urlInput").value.trim();
+        const resultBox = document.getElementById("result-box");
+
+        if (!urlInput) {
             tg.showAlert("Vui lòng nhập đường dẫn!");
             return;
         }
-        
-        // Gửi dữ liệu URL về lại Bot Telegram
-        tg.sendData(url);
-        tg.close();
+
+        resultBox.style.display = "block";
+        resultBox.className = "loading";
+        resultBox.innerHTML = "⏳ <b>Đang xử lý bypass, vui lòng chờ...</b>";
+
+        try {
+            const apiEndpoint = `https://api.allorigins.win/get?url=${encodeURIComponent("http://test.skidvn.com/bypasslayma.php?link=" + encodeURIComponent(urlInput))}`;
+            const response = await fetch(apiEndpoint);
+            const data = await response.json();
+            
+            if (data && data.contents) {
+                const resJson = JSON.parse(data.contents);
+                if (resJson.data) {
+                    resultBox.className = "success";
+                    resultBox.innerHTML = "✅ <b>Thành công!</b> Đang gửi kết quả vào Telegram...";
+
+                    if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
+
+                    // Gửi dữ liệu gồm link gốc và link đã bypass về lại cho bot Python
+                    const payload = JSON.stringify({
+                        target_url: urlInput,
+                        result: resJson.data
+                    });
+
+                    // Nếu dùng nút Menu Button / Keyboard WebApp
+                    if (tg.sendData) {
+                        tg.sendData(payload);
+                        tg.close();
+                    } else {
+                        // Trường hợp mở bằng Inline Button
+                        resultBox.innerHTML = `
+                            <b>🎉 XỬ LÝ THÀNH CÔNG!</b><br/><br/>
+                            <b>Kết quả:</b><br/>
+                            <code>${resJson.data}</code>
+                        `;
+                    }
+                    return;
+                }
+            }
+            
+            resultBox.className = "error";
+            resultBox.innerHTML = "❌ <b>Lỗi:</b> Không lấy được link kết quả từ API.";
+            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred("error");
+
+        } catch (err) {
+            resultBox.className = "error";
+            resultBox.innerHTML = "❌ <b>Lỗi:</b> Không thể kết nối tới server API!";
+            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred("error");
+        }
     }
 </script>
 
