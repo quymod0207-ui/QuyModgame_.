@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bypass Layma VIP</title>
-    <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -12,40 +11,52 @@
             --text-color: var(--tg-theme-text-color, #ffffff);
             --button-color: var(--tg-theme-button-color, #5288c1);
             --button-text: var(--tg-theme-button-text-color, #ffffff);
+            --hint-color: var(--tg-theme-hint-color, #aaaaaa);
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
         }
-        .card {
+        .container {
             width: 100%;
             max-width: 400px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             padding: 20px;
             box-sizing: border-box;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        h2 { text-align: center; margin-top: 0; }
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            font-size: 20px;
+        }
+        label {
+            font-size: 14px;
+            color: var(--hint-color);
+            display: block;
+            margin-bottom: 8px;
+        }
         input[type="text"] {
             width: 100%;
             padding: 12px;
-            margin: 10px 0;
             border-radius: 8px;
-            border: 1px solid #444;
-            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.2);
             color: var(--text-color);
             box-sizing: border-box;
+            font-size: 15px;
+            outline: none;
         }
         button {
             width: 100%;
             padding: 12px;
+            margin-top: 15px;
             border: none;
             border-radius: 8px;
             background-color: var(--button-color);
@@ -54,76 +65,31 @@
             font-size: 16px;
             cursor: pointer;
         }
-        #result-box {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            word-break: break-all;
-            display: none;
-        }
-        .success { background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71; }
-        .error { background: rgba(231, 76, 60, 0.2); border: 1px solid #e74c3c; }
     </style>
 </head>
 <body>
 
-<div class="card">
+<div class="container">
     <h2>BYPASS LAYMA.NET VIP</h2>
-    <label for="urlInput">Nhập Link Cần Bypass:</label>
+    <label for="urlInput">Dán đường dẫn cần bypass vào đây:</label>
     <input type="text" id="urlInput" placeholder="https://layma.net/..." />
-    <button onclick="submitBypass()">BẮT ĐẦU XỬ LÝ</button>
-
-    <div id="result-box"></div>
+    <button onclick="sendData()">GỬI YÊU CẦU</button>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
-    tg.expand(); // Mở rộng Web App full màn hình
+    tg.expand();
 
-    // Cấu hình URL Backend API của bạn tại đây
-    const BACKEND_API = "https://your-domain.com/api/bypass";
-
-    async function submitBypass() {
-        const url = document.getElementById("urlInput").value;
-        const resultBox = document.getElementById("result-box");
-
+    function sendData() {
+        const url = document.getElementById("urlInput").value.trim();
         if (!url) {
             tg.showAlert("Vui lòng nhập đường dẫn!");
             return;
         }
-
-        resultBox.style.display = "block";
-        resultBox.className = "";
-        resultBox.innerHTML = "⏳ Đang xử lý...";
-
-        try {
-            const response = await fetch(BACKEND_API, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ url: url })
-            });
-
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                resultBox.className = "success";
-                resultBox.innerHTML = `
-                    <b>✅ Xử lý thành công!</b><br/>
-                    <b>Thời gian:</b> ${data.elapsed_time}s<br/><br/>
-                    <b>Kết quả:</b><br/>
-                    <a href="${data.result}" target="_blank" style="color:#3498db;">${data.result}</a>
-                `;
-                // Rung phản hồi haptic trên thiết bị
-                tg.HapticFeedback.notificationOccurred("success");
-            } else {
-                resultBox.className = "error";
-                resultBox.innerHTML = `❌ Lỗi: ${data.detail || "Không thể xử lý link"}`;
-                tg.HapticFeedback.notificationOccurred("error");
-            }
-        } catch (err) {
-            resultBox.className = "error";
-            resultBox.innerHTML = "❌ Lỗi kết nối tới máy chủ!";
-        }
+        
+        // Gửi dữ liệu URL về lại Bot Telegram
+        tg.sendData(url);
+        tg.close();
     }
 </script>
 
