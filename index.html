@@ -2,1029 +2,130 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bypass Layma Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bypass Layma VIP</title>
+    <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-
         :root {
-            --bg-primary: #0f1219;
-            --bg-secondary: #181e2b;
-            --bg-card: #1a2332;
-            --bg-input: #0d111a;
-            --text-primary: #f0f4ff;
-            --text-secondary: #8fa3c9;
-            --text-muted: #5a6f8e;
-            --accent: #6c8cff;
-            --accent-glow: rgba(108, 140, 255, 0.3);
-            --success: #4cd9a0;
-            --error: #ff6b7c;
-            --border: rgba(255, 255, 255, 0.06);
-            --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --bg-color: var(--tg-theme-bg-color, #17212b);
+            --text-color: var(--tg-theme-text-color, #ffffff);
+            --button-color: var(--tg-theme-button-color, #5288c1);
+            --button-text: var(--tg-theme-button-text-color, #ffffff);
         }
-
         body {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            position: relative;
-            overflow-x: hidden;
+            align-items: center;
         }
-
-        /* Animated Background */
-        .bg-glow {
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(ellipse at 30% 20%, rgba(108, 140, 255, 0.05) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 80%, rgba(76, 217, 160, 0.03) 0%, transparent 50%);
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* Main Container */
-        .app-container {
-            position: relative;
-            z-index: 1;
-            max-width: 480px;
+        .card {
             width: 100%;
-            margin: 0 auto;
-            padding: 20px 16px 30px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* === HEADER === */
-        .app-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 16px 0 24px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 24px;
-        }
-
-        .app-logo {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, var(--accent), #4a6cf7);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: white;
-            flex-shrink: 0;
-            box-shadow: 0 8px 24px var(--accent-glow);
-            position: relative;
-        }
-
-        .app-logo::after {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 18px;
-            background: linear-gradient(135deg, var(--accent), transparent);
-            opacity: 0.3;
-            z-index: -1;
-            filter: blur(8px);
-        }
-
-        .app-info {
-            flex: 1;
-        }
-
-        .app-info h1 {
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #fff 60%, var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .app-info .subtitle {
-            font-size: 13px;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 2px;
-        }
-
-        .app-info .subtitle .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--success);
-            display: inline-block;
-            animation: pulse-dot 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.8); }
-        }
-
-        .header-action {
-            background: rgba(108, 140, 255, 0.1);
-            border: 1px solid rgba(108, 140, 255, 0.15);
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
-            padding: 8px 14px;
-            font-size: 11px;
-            color: var(--accent);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .header-action:hover {
-            background: rgba(108, 140, 255, 0.2);
-            transform: scale(1.02);
-        }
-
-        /* === STATS BAR === */
-        .stats-bar {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 24px;
-        }
-
-        .stat-item {
-            background: var(--bg-card);
-            border-radius: 14px;
-            padding: 14px 12px;
-            text-align: center;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .stat-item:hover {
-            border-color: rgba(108, 140, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .stat-item .number {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-            display: block;
-        }
-
-        .stat-item .label {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 4px;
-        }
-
-        .stat-item .number.accent { color: var(--accent); }
-        .stat-item .number.success { color: var(--success); }
-        .stat-item .number.error { color: var(--error); }
-
-        /* === INPUT SECTION === */
-        .input-section {
-            background: var(--bg-card);
-            border-radius: 20px;
             padding: 20px;
-            border: 1px solid var(--border);
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
+            box-sizing: border-box;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-
-        .input-section:focus-within {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(108, 140, 255, 0.08);
+        h2 { text-align: center; margin-top: 0; }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: rgba(0,0,0,0.2);
+            color: var(--text-color);
+            box-sizing: border-box;
         }
-
-        .input-label {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .input-label span {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .input-label span i {
-            color: var(--accent);
-        }
-
-        .input-label .char-count {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .input-wrapper {
-            display: flex;
-            gap: 10px;
-            align-items: stretch;
-        }
-
-        .input-wrapper input {
-            flex: 1;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 16px 18px;
-            color: var(--text-primary);
-            font-size: 15px;
-            outline: none;
-            transition: all 0.3s ease;
-            min-width: 0;
-        }
-
-        .input-wrapper input:focus {
-            border-color: var(--accent);
-            background: rgba(108, 140, 255, 0.03);
-        }
-
-        .input-wrapper input::placeholder {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        .btn-bypass {
-            background: linear-gradient(135deg, var(--accent), #5a7ae6);
+        button {
+            width: 100%;
+            padding: 12px;
             border: none;
-            border-radius: 14px;
-            padding: 0 28px;
-            color: white;
-            font-weight: 700;
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            box-shadow: 0 6px 20px var(--accent-glow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-bypass::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .btn-bypass:hover::before {
-            opacity: 1;
-        }
-
-        .btn-bypass:active {
-            transform: scale(0.95);
-        }
-
-        .btn-bypass:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-bypass .spinner-btn {
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255,255,255,0.2);
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            display: none;
-        }
-
-        .btn-bypass.loading .spinner-btn {
-            display: block;
-        }
-
-        .btn-bypass.loading .btn-text {
-            display: none;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* === RESULT CARD === */
-        .result-card {
-            background: var(--bg-card);
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            overflow: hidden;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.4s ease;
-        }
-
-        .result-header {
-            padding: 18px 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .result-status {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .result-status .icon-wrap {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border-radius: 8px;
+            background-color: var(--button-color);
+            color: var(--button-text);
+            font-weight: bold;
             font-size: 16px;
-            flex-shrink: 0;
-        }
-
-        .result-status .icon-wrap.idle {
-            background: rgba(139, 155, 181, 0.1);
-            color: var(--text-muted);
-        }
-
-        .result-status .icon-wrap.loading {
-            background: rgba(108, 140, 255, 0.15);
-            color: var(--accent);
-            animation: pulse-ring 1.2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-ring {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(0.92); }
-        }
-
-        .result-status .icon-wrap.success {
-            background: rgba(76, 217, 160, 0.15);
-            color: var(--success);
-        }
-
-        .result-status .icon-wrap.error {
-            background: rgba(255, 107, 124, 0.15);
-            color: var(--error);
-        }
-
-        .result-status .status-label {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .result-status .status-label .hint {
-            font-weight: 400;
-            font-size: 12px;
-            color: var(--text-muted);
-            display: block;
-        }
-
-        .result-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .result-actions button {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 8px 12px;
-            color: var(--text-secondary);
-            font-size: 13px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
-
-        .result-actions button:hover {
-            background: rgba(255,255,255,0.08);
-            color: var(--text-primary);
-        }
-
-        .result-actions button.copied {
-            color: var(--success);
-            border-color: var(--success);
-        }
-
-        .result-body {
-            padding: 20px;
-            flex: 1;
-            min-height: 120px;
-            max-height: 350px;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .result-body .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            min-height: 100px;
-            color: var(--text-muted);
-            gap: 12px;
-        }
-
-        .result-body .empty-state i {
-            font-size: 42px;
-            opacity: 0.2;
-        }
-
-        .result-body .empty-state p {
-            font-size: 14px;
-            opacity: 0.6;
-        }
-
-        .result-body .content {
-            font-size: 14px;
-            line-height: 1.8;
-            color: var(--text-secondary);
+        #result-box {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
             word-break: break-all;
-            white-space: pre-wrap;
+            display: none;
         }
-
-        .result-body .content a {
-            color: var(--accent);
-            text-decoration: none;
-            border-bottom: 1px dashed rgba(108, 140, 255, 0.2);
-            transition: all 0.2s ease;
-        }
-
-        .result-body .content a:hover {
-            border-bottom-color: var(--accent);
-        }
-
-        .result-body .content .json-view {
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-            padding: 14px;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 13px;
-            overflow-x: auto;
-            color: #c8d6e8;
-        }
-
-        .result-body .content .json-view .key { color: #6c8cff; }
-        .result-body .content .json-view .string { color: #4cd9a0; }
-        .result-body .content .json-view .number { color: #ffb86b; }
-        .result-body .content .json-view .boolean { color: #ff6b7c; }
-
-        /* === FOOTER === */
-        .app-footer {
-            margin-top: 20px;
-            padding: 16px 0 0;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .app-footer .info-text {
-            font-size: 12px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .app-footer .info-text .sep {
-            opacity: 0.2;
-        }
-
-        .app-footer .badge-status {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .app-footer .badge-status .live-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success);
-            animation: pulse-dot 1.5s ease-in-out infinite;
-        }
-
-        /* Scrollbar */
-        .result-body::-webkit-scrollbar {
-            width: 4px;
-        }
-        .result-body::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .result-body::-webkit-scrollbar-thumb {
-            background: rgba(108, 140, 255, 0.3);
-            border-radius: 10px;
-        }
-
-        /* Responsive */
-        @media (max-width: 420px) {
-            .app-container {
-                padding: 12px 10px 20px;
-            }
-
-            .stats-bar {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 6px;
-            }
-
-            .stat-item {
-                padding: 10px 8px;
-            }
-
-            .stat-item .number {
-                font-size: 17px;
-            }
-
-            .input-section {
-                padding: 14px;
-            }
-
-            .input-wrapper {
-                flex-direction: column;
-            }
-
-            .btn-bypass {
-                padding: 14px;
-                justify-content: center;
-            }
-
-            .result-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-            .result-actions {
-                width: 100%;
-                justify-content: flex-end;
-            }
-
-            .app-header {
-                padding: 10px 0 16px;
-            }
-
-            .app-logo {
-                width: 44px;
-                height: 44px;
-                font-size: 20px;
-            }
-
-            .app-info h1 {
-                font-size: 19px;
-            }
-        }
-
-        /* Telegram Light theme */
-        @media (prefers-color-scheme: light) {
-            :root {
-                --bg-primary: #eef0f5;
-                --bg-secondary: #ffffff;
-                --bg-card: #ffffff;
-                --bg-input: #f0f2f7;
-                --text-primary: #1a1e2b;
-                --text-secondary: #4a5a7a;
-                --text-muted: #8a9bb5;
-                --border: rgba(0, 0, 0, 0.08);
-                --shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-            }
-
-            .bg-glow {
-                background: radial-gradient(ellipse at 30% 20%, rgba(108, 140, 255, 0.06) 0%, transparent 60%);
-            }
-
-            .result-body .content .json-view {
-                background: rgba(0,0,0,0.04);
-                color: #2d3748;
-            }
-
-            .result-header {
-                background: rgba(0,0,0,0.02);
-            }
-        }
+        .success { background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71; }
+        .error { background: rgba(231, 76, 60, 0.2); border: 1px solid #e74c3c; }
     </style>
 </head>
 <body>
-    <div class="bg-glow"></div>
 
-    <div class="app-container">
-        <!-- Header -->
-        <header class="app-header">
-            <div class="app-logo">
-                <i class="fas fa-unlock-alt"></i>
-            </div>
-            <div class="app-info">
-                <h1>Bypass Layma</h1>
-                <div class="subtitle">
-                    <span class="dot"></span>
-                    <span>Hoạt động · v2.0</span>
-                </div>
-            </div>
-            <button class="header-action" id="clearBtn">
-                <i class="fas fa-eraser"></i> Xoá
-            </button>
-        </header>
+<div class="card">
+    <h2>BYPASS LAYMA.NET VIP</h2>
+    <label for="urlInput">Nhập Link Cần Bypass:</label>
+    <input type="text" id="urlInput" placeholder="https://layma.net/..." />
+    <button onclick="submitBypass()">BẮT ĐẦU XỬ LÝ</button>
 
-        <!-- Stats -->
-        <div class="stats-bar">
-            <div class="stat-item">
-                <span class="number accent" id="totalRequests">0</span>
-                <span class="label">Tổng yêu cầu</span>
-            </div>
-            <div class="stat-item">
-                <span class="number success" id="successCount">0</span>
-                <span class="label">Thành công</span>
-            </div>
-            <div class="stat-item">
-                <span class="number error" id="errorCount">0</span>
-                <span class="label">Lỗi</span>
-            </div>
-        </div>
+    <div id="result-box"></div>
+</div>
 
-        <!-- Input -->
-        <div class="input-section">
-            <div class="input-label">
-                <span><i class="fas fa-link"></i> Link cần bypass</span>
-                <span class="char-count" id="charCount">0/500</span>
-            </div>
-            <div class="input-wrapper">
-                <input type="url" id="linkInput" placeholder="https://layma.com/..." autofocus>
-                <button class="btn-bypass" id="submitBtn">
-                    <span class="spinner-btn"></span>
-                    <span class="btn-text"><i class="fas fa-arrow-right"></i> Bypass</span>
-                </button>
-            </div>
-        </div>
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // Mở rộng Web App full màn hình
 
-        <!-- Result -->
-        <div class="result-card">
-            <div class="result-header">
-                <div class="result-status">
-                    <div class="icon-wrap idle" id="statusIcon">
-                        <i class="fas fa-circle-info"></i>
-                    </div>
-                    <div class="status-label" id="statusLabel">
-                        Sẵn sàng
-                        <span class="hint" id="statusHint">Nhập link và nhấn Bypass</span>
-                    </div>
-                </div>
-                <div class="result-actions">
-                    <button id="copyBtn">
-                        <i class="fas fa-copy"></i> <span id="copyText">Sao chép</span>
-                    </button>
-                    <button id="expandBtn" title="Mở rộng">
-                        <i class="fas fa-expand"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="result-body" id="resultBody">
-                <div class="empty-state">
-                    <i class="fas fa-hourglass-half"></i>
-                    <p>Chờ xử lý link của bạn...</p>
-                </div>
-            </div>
-        </div>
+    // Cấu hình URL Backend API của bạn tại đây
+    const BACKEND_API = "https://your-domain.com/api/bypass";
 
-        <!-- Footer -->
-        <div class="app-footer">
-            <div class="info-text">
-                <span>⚡ API: test.skidvn.com</span>
-                <span class="sep">|</span>
-                <span id="responseTime">— ms</span>
-            </div>
-            <div class="badge-status">
-                <span class="live-dot"></span>
-                <span>Live</span>
-            </div>
-        </div>
-    </div>
+    async function submitBypass() {
+        const url = document.getElementById("urlInput").value;
+        const resultBox = document.getElementById("result-box");
 
-    <script>
-        (function() {
-            // DOM refs
-            const linkInput = document.getElementById('linkInput');
-            const submitBtn = document.getElementById('submitBtn');
-            const statusIcon = document.getElementById('statusIcon');
-            const statusLabel = document.getElementById('statusLabel');
-            const statusHint = document.getElementById('statusHint');
-            const resultBody = document.getElementById('resultBody');
-            const copyBtn = document.getElementById('copyBtn');
-            const copyText = document.getElementById('copyText');
-            const clearBtn = document.getElementById('clearBtn');
-            const expandBtn = document.getElementById('expandBtn');
-            const charCount = document.getElementById('charCount');
-            const totalRequests = document.getElementById('totalRequests');
-            const successCount = document.getElementById('successCount');
-            const errorCount = document.getElementById('errorCount');
-            const responseTime = document.getElementById('responseTime');
+        if (!url) {
+            tg.showAlert("Vui lòng nhập đường dẫn!");
+            return;
+        }
 
-            // State
-            let stats = { total: 0, success: 0, error: 0 };
-            let currentResult = '';
-            let isProcessing = false;
-            let expanded = false;
+        resultBox.style.display = "block";
+        resultBox.className = "";
+        resultBox.innerHTML = "⏳ Đang xử lý...";
 
-            // Update stats
-            function updateStats() {
-                totalRequests.textContent = stats.total;
-                successCount.textContent = stats.success;
-                errorCount.textContent = stats.error;
-            }
-
-            // Set status
-            function setStatus(type, title, hint, content = '') {
-                const iconMap = {
-                    idle: { class: 'idle', icon: 'fa-circle-info' },
-                    loading: { class: 'loading', icon: 'fa-spinner fa-spin' },
-                    success: { class: 'success', icon: 'fa-check-circle' },
-                    error: { class: 'error', icon: 'fa-exclamation-circle' }
-                };
-
-                const state = iconMap[type] || iconMap.idle;
-                statusIcon.className = `icon-wrap ${state.class}`;
-                statusIcon.innerHTML = `<i class="fas ${state.icon}"></i>`;
-                statusLabel.textContent = title;
-                statusHint.textContent = hint || '';
-
-                // Update body
-                if (type === 'loading') {
-                    resultBody.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-spinner fa-spin" style="font-size:32px;color:var(--accent);opacity:1;"></i>
-                            <p style="color:var(--accent);">${hint || 'Đang xử lý...'}</p>
-                        </div>
-                    `;
-                } else if (type === 'idle') {
-                    resultBody.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-hourglass-half"></i>
-                            <p>${hint || 'Chờ xử lý link của bạn...'}</p>
-                        </div>
-                    `;
-                } else if (content) {
-                    resultBody.innerHTML = `<div class="content">${content}</div>`;
-                    currentResult = content;
-                } else {
-                    resultBody.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-${type === 'error' ? 'times-circle' : 'check-circle'}"></i>
-                            <p>${hint || 'Không có dữ liệu'}</p>
-                        </div>
-                    `;
-                    currentResult = '';
-                }
-
-                // Update button
-                if (type === 'loading') {
-                    submitBtn.disabled = true;
-                    submitBtn.classList.add('loading');
-                } else {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('loading');
-                }
-            }
-
-            // Escape HTML
-            function escapeHtml(text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            }
-
-            // Format JSON with syntax highlighting
-            function formatJson(data) {
-                if (typeof data === 'object' && data !== null) {
-                    const result = data.result || data.data || data.url || data.link || data.content;
-                    if (result && typeof result === 'string') {
-                        if (result.match(/^https?:\/\/.+/)) {
-                            return `<a href="${result}" target="_blank" rel="noopener">${escapeHtml(result)}</a>`;
-                        }
-                        return escapeHtml(result);
-                    }
-                    // Pretty JSON
-                    const json = JSON.stringify(data, null, 2);
-                    return `<div class="json-view">${escapeHtml(json)}</div>`;
-                }
-                return escapeHtml(String(data));
-            }
-
-            // Call API
-            async function callBypassAPI(url) {
-                const apiBase = 'http://test.skidvn.com/bypasslayma.php?link=';
-                const fullUrl = apiBase + encodeURIComponent(url);
-
-                const startTime = performance.now();
-                setStatus('loading', 'Đang xử lý', 'Gọi API...');
-
-                try {
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 15000);
-
-                    const response = await fetch(fullUrl, {
-                        method: 'GET',
-                        signal: controller.signal,
-                        headers: {
-                            'Accept': 'application/json, text/plain, */*',
-                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-                        }
-                    });
-
-                    clearTimeout(timeoutId);
-                    const elapsed = Math.round(performance.now() - startTime);
-                    responseTime.textContent = `${elapsed} ms`;
-
-                    if (response.status === 403) {
-                        throw new Error('API bị chặn (403) — Cần xác thực hoặc proxy');
-                    }
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status} — ${response.statusText}`);
-                    }
-
-                    const contentType = response.headers.get('content-type') || '';
-                    let data;
-                    if (contentType.includes('application/json')) {
-                        data = await response.json();
-                    } else {
-                        const text = await response.text();
-                        try { data = JSON.parse(text); } catch { data = text; }
-                    }
-
-                    const formatted = formatJson(data);
-                    if (formatted && formatted.trim()) {
-                        setStatus('success', '✅ Bypass thành công', `Nhận dữ liệu từ ${url}`, formatted);
-                        stats.success++;
-                    } else {
-                        throw new Error('Dữ liệu trả về rỗng');
-                    }
-
-                } catch (error) {
-                    const elapsed = Math.round(performance.now() - startTime);
-                    responseTime.textContent = `${elapsed} ms`;
-
-                    let msg = error.message || 'Không thể kết nối API';
-                    if (error.name === 'AbortError') msg = '⏱️ Quá thời gian chờ (15s)';
-                    setStatus('error', '❌ Lỗi', msg, `<span style="color:var(--error);">⚠️ ${escapeHtml(msg)}</span>`);
-                    stats.error++;
-                }
-
-                stats.total++;
-                updateStats();
-                isProcessing = false;
-            }
-
-            // Handle submit
-            async function handleSubmit() {
-                if (isProcessing) return;
-                let url = linkInput.value.trim();
-                if (!url) {
-                    setStatus('error', '⚠️ Thiếu link', 'Vui lòng nhập link cần bypass');
-                    return;
-                }
-
-                if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                    url = 'https://' + url;
-                    linkInput.value = url;
-                }
-
-                isProcessing = true;
-                await callBypassAPI(url);
-            }
-
-            // Copy
-            copyBtn.addEventListener('click', () => {
-                const text = currentResult || resultBody.textContent || '';
-                if (!text.trim() || text.includes('Chờ xử lý') || text.includes('Không có dữ liệu')) {
-                    copyText.textContent = 'Không có dữ liệu';
-                    copyBtn.classList.add('copied');
-                    setTimeout(() => {
-                        copyText.textContent = 'Sao chép';
-                        copyBtn.classList.remove('copied');
-                    }, 1500);
-                    return;
-                }
-
-                // Extract plain text from HTML
-                const temp = document.createElement('div');
-                temp.innerHTML = text;
-                const plainText = temp.textContent || text;
-
-                navigator.clipboard.writeText(plainText).then(() => {
-                    copyText.textContent = '✅ Đã sao chép!';
-                    copyBtn.classList.add('copied');
-                    setTimeout(() => {
-                        copyText.textContent = 'Sao chép';
-                        copyBtn.classList.remove('copied');
-                    }, 2000);
-                }).catch(() => {
-                    // Fallback
-                    const textarea = document.createElement('textarea');
-                    textarea.value = plainText;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    textarea.remove();
-                    copyText.textContent = '✅ Đã sao chép!';
-                    copyBtn.classList.add('copied');
-                    setTimeout(() => {
-                        copyText.textContent = 'Sao chép';
-                        copyBtn.classList.remove('copied');
-                    }, 2000);
-                });
+        try {
+            const response = await fetch(BACKEND_API, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: url })
             });
 
-            // Clear
-            clearBtn.addEventListener('click', () => {
-                linkInput.value = '';
-                linkInput.focus();
-                setStatus('idle', 'Sẵn sàng', 'Nhập link và nhấn Bypass');
-                currentResult = '';
-                responseTime.textContent = '— ms';
-            });
+            const data = await response.json();
 
-            // Expand
-            expandBtn.addEventListener('click', () => {
-                const body = document.querySelector('.result-body');
-                if (!expanded) {
-                    body.style.maxHeight = '600px';
-                    expandBtn.innerHTML = '<i class="fas fa-compress"></i>';
-                } else {
-                    body.style.maxHeight = '350px';
-                    expandBtn.innerHTML = '<i class="fas fa-expand"></i>';
-                }
-                expanded = !expanded;
-            });
-
-            // Char counter
-            linkInput.addEventListener('input', () => {
-                const len = linkInput.value.length;
-                charCount.textContent = `${len}/500`;
-                if (len > 500) {
-                    charCount.style.color = 'var(--error)';
-                } else {
-                    charCount.style.color = '';
-                }
-            });
-
-            // Events
-            submitBtn.addEventListener('click', handleSubmit);
-            linkInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    handleSubmit();
-                }
-            });
-
-            // Telegram WebApp
-            if (window.Telegram && window.Telegram.WebApp) {
-                const tg = window.Telegram.WebApp;
-                tg.expand();
-                tg.enableClosingConfirmation();
+            if (response.ok && data.success) {
+                resultBox.className = "success";
+                resultBox.innerHTML = `
+                    <b>✅ Xử lý thành công!</b><br/>
+                    <b>Thời gian:</b> ${data.elapsed_time}s<br/><br/>
+                    <b>Kết quả:</b><br/>
+                    <a href="${data.result}" target="_blank" style="color:#3498db;">${data.result}</a>
+                `;
+                // Rung phản hồi haptic trên thiết bị
+                tg.HapticFeedback.notificationOccurred("success");
+            } else {
+                resultBox.className = "error";
+                resultBox.innerHTML = `❌ Lỗi: ${data.detail || "Không thể xử lý link"}`;
+                tg.HapticFeedback.notificationOccurred("error");
             }
+        } catch (err) {
+            resultBox.className = "error";
+            resultBox.innerHTML = "❌ Lỗi kết nối tới máy chủ!";
+        }
+    }
+</script>
 
-            // Init
-            setStatus('idle', 'Sẵn sàng', 'Nhập link và nhấn Bypass');
-            updateStats();
-        })();
-    </script>
 </body>
 </html>
